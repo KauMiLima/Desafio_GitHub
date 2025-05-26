@@ -1,11 +1,5 @@
 window.onload = () => {
-  const user = localStorage.getItem("githubUser");
-  if (user) {
-    document.getElementById("search").value = user;
-    buscarRepos();
-  }
-
- document.getElementById("search").addEventListener("keydown", (event) => {
+  document.getElementById("search").addEventListener("keydown", (event) => {
     if (event.key === "Enter") {
       buscarRepos();
     }
@@ -16,43 +10,84 @@ function buscarRepos() {
   const username = document.getElementById("search").value.trim();
   if (!username) return;
 
+  const perfilExistente = document.getElementById("perfil");
+  if (perfilExistente) perfilExistente.remove();
 
   fetch(`https://api.github.com/users/${username}`)
-    .then((res) => res.json())
+    .then((res) => {
+      if (!res.ok) {
+        throw new Error("Usuário não encontrado");
+      }
+      return res.json();
+    })
     .then((user) => {
-      document.getElementById("perfil").innerHTML = `
+      const perfilDiv = document.createElement("div");
+      perfilDiv.id = "perfil";
+
+      const blog = user.blog ? user.blog.trim() : "";
+      const isLinkedIn = blog.includes("linkedin.com");
+
+      perfilDiv.innerHTML = `
         <div class="debatata">
-          <img src="${user.avatar_url}" width="80" style="border-radius:50%"><br>
+          <img src="${user.avatar_url}" width="80" style="border-radius:50%">
         </div>
         <section class="pandequeijo">
           <strong>${user.name || user.login}</strong><br>
           <p>${user.bio || "Bio não informada"}</p>
-
           <div class="icons">
-          <p>👥 Seguidores: ${user.followers}</p>
-          <p>➡️ Seguindo: ${user.following}</p>
+            <p>👥 Seguidores: ${user.followers}</p>
+            <p>➡️ Seguindo: ${user.following}</p>
             <p>📍 ${user.location || "Localização não informada"}</p>
+            ${
+              blog
+                ? `<p>🔗 <a href="${blog}" target="_blank">
+                    ${isLinkedIn ? "LinkedIn" : "Website Pessoal"}
+                   </a></p>`
+                : ""
+            }
           </div>
         </section>
       `;
+
+      const container = document.querySelector(".container");
+      container.insertBefore(perfilDiv, document.getElementById("repos"));
+    })
+    .catch((error) => {
+      alert(error.message);
     });
 
-  
   fetch(`https://api.github.com/users/${username}/repos`)
-    .then((res) => res.json())
+    .then((res) => {
+      if (!res.ok) {
+        throw new Error("Repositórios não encontrados");
+      }
+      return res.json();
+    })
     .then((repos) => {
       const reposDiv = document.getElementById("repos");
       reposDiv.innerHTML = "";
-      repos.forEach((repo) => {
-        reposDiv.innerHTML += `
-          <div class="repo-card">
-            <strong class="repo-text">${repo.name}</strong><br>
-            <p class="star">⭐ Estrelas: ${repo.stargazers_count}</p>
-             <a href="${repo.html_url}" target="_blank">
-            <button class="btn-repo">Ver no GitHub</button>
-          </a>
-          </div>
-        `;
-      });
+      if (repos.length === 0) {
+        reposDiv.innerHTML = "<p>Nenhum repositório encontrado.</p>";
+      } else {
+        repos.forEach((repo) => {
+          reposDiv.innerHTML += `
+            <div class="repo-card">
+              <div class="repo-title">
+                <strong class="repo-text">${repo.name}</strong>
+              </div>
+              <div class="repo-star">
+                <p class="star">⭐ Estrelas: ${repo.stargazers_count}</p>
+              </div>
+              <a href="${repo.html_url}" target="_blank">
+                <button class="btn-repo">Ver no GitHub</button>
+              </a>
+            </div>
+          `;
+        });
+      }
+    })
+    .catch((error) => {
+      const reposDiv = document.getElementById("repos");
+      reposDiv.innerHTML = `<p>${error.message}</p>`;
     });
 }

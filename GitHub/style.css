@@ -1,4 +1,4 @@
-*{
+* {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
@@ -19,7 +19,7 @@ body {
   flex-direction: column;
   text-align: center;
   background: white;
-  border: 2px solid #C9C9C9;
+  border: 2px solid #c9c9c9;
   padding: 30px;
   width: 90%;
   max-width: 1000px;
@@ -27,20 +27,20 @@ body {
 
 #perfil {
   display: flex;
-  width: 84%; 
+  width: 84%;
   flex-direction: row;
   flex-wrap: wrap;
   justify-content: flex-start;
   align-items: flex-start;
-  border: 2px solid #C9C9C9;
+  border: 2px solid #c9c9c9;
   border-radius: 8px;
   margin-top: 15px;
   padding: 15px;
-  gap: 20px; 
+  gap: 20px;
 }
 
 .debatata {
-  flex: 0 0 auto; 
+  flex: 0 0 auto;
   margin-top: 18px;
 }
 
@@ -52,7 +52,6 @@ body {
   flex: 1 1 300px;
 }
 
-
 .icons {
   display: flex;
   flex-direction: row;
@@ -62,13 +61,12 @@ body {
   flex-wrap: wrap;
 }
 
-.pesquisar{
+.pesquisar {
   display: flex;
   justify-content: center;
   align-items: center;
   width: 100%;
   flex-direction: row;
-  
 }
 
 input {
@@ -102,34 +100,39 @@ button {
 .repo-card {
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
+  justify-content: space-between;
   gap: 10px;
-  border: 2px solid #C9C9C9;
+  border: 2px solid #c9c9c9;
   padding: 15px;
   border-radius: 8px;
   margin-top: 20px;
   width: 250px;
-  min-height: 180px;
+  min-height: 200px;
   text-align: left;
+  background-color: white;
 }
 
+.repo-content {
+  flex-grow: 1;
+}
 
-.repo-text {
-  word-break: break-word;
+.repo-title {
   font-weight: bold;
-  font-size: 16px;
+  font-size: 18px;
+  word-break: break-word;
 }
 
-.star {
-  margin-top: 10px;
+.repo-bottom {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
 .repo-card button {
   background-color: #fff;
   color: #000;
-  border: 2px solid #C9C9C9;
+  border: 2px solid #c9c9c9;
   border-radius: 8px;
-  margin-top: 10px;
   padding: 8px;
   cursor: pointer;
   transition: background-color 0.3s;
@@ -138,6 +141,7 @@ button {
 .repo-card button:hover {
   background-color: #eee;
 }
+
 @media (max-width: 600px) {
   .pandequeijo {
     font-size: 18px;
